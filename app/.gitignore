@@ -7,6 +7,7 @@ Thumbs.db
 local.properties
 .gradle/
 **/build/
+**/*.class
 
 !gradlew
 !gradlew.bat
@@ -19,7 +20,7 @@ local.properties
 *.lock
 
 *.apk
-*.ap_ 
+*.ap_
 *.aab
 
 /reports/
@@ -27,15 +28,14 @@ local.properties
 /lint/
 caches.xml
 
-*.class
 *.jar
 *.war
 *.ear
-
 *.o
 *.so
 *.d
 
 *.env
 .env.*
-.*gradle\*
+
+.*gradle*
