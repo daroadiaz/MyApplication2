@@ -1,5 +1,3 @@
-/build
-
 *.DS_Store
 Thumbs.db
 
@@ -29,7 +27,6 @@ local.properties
 /lint/
 caches.xml
 
-
 *.class
 *.jar
 *.war
@@ -41,5 +38,4 @@ caches.xml
 
 *.env
 .env.*
-
-.gradle/
+.*gradle\*
