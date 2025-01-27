@@ -49,7 +49,7 @@ class AuthViewModel : ViewModel() {
         }
 
         // Ejemplo de tope de usuarios
-        if (users.size >= 5) {
+        if (users.size >= 10) {
             _authState.value = AuthState.Error("Límite de usuarios alcanzado")
             return
         }
