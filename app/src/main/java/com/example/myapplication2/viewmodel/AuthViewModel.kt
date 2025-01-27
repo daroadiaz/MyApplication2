@@ -21,24 +21,51 @@ class AuthViewModel : ViewModel() {
     val currentUser: StateFlow<User?> = _currentUser
 
     fun login(username: String, password: String) {
-        val user = users.find { it.username == username && it.password == password }
-        if (user != null) {
-            _currentUser.value = user
-            _authState.value = AuthState.Success("Inicio de sesión exitoso")
-        } else {
-            _authState.value = AuthState.Error("Credenciales inválidas")
+        // Validación básica
+        if (username.isBlank() || password.isBlank()) {
+            _authState.value = AuthState.Error("Por favor, ingresa usuario y contraseña")
+            return
         }
+
+        val user = users.find { it.username == username }
+        if (user == null) {
+            _authState.value = AuthState.Error("Usuario no encontrado")
+            return
+        }
+        if (user.password != password) {
+            _authState.value = AuthState.Error("Contraseña incorrecta")
+            return
+        }
+
+        _currentUser.value = user
+        _authState.value = AuthState.Success("Inicio de sesión exitoso")
     }
 
     fun register(username: String, password: String, email: String) {
+        // Validación básica
+        if (username.isBlank() || password.isBlank() || email.isBlank()) {
+            _authState.value = AuthState.Error("Todos los campos son obligatorios")
+            return
+        }
+
+        // Ejemplo de tope de usuarios
         if (users.size >= 5) {
             _authState.value = AuthState.Error("Límite de usuarios alcanzado")
             return
         }
-        if (users.any { it.username == username }) {
-            _authState.value = AuthState.Error("Usuario ya existe")
+
+        // Si el correo ya existe
+        if (users.any { it.email == email }) {
+            _authState.value = AuthState.Error("Ya existe una cuenta con este correo")
             return
         }
+
+        // Si el usuario ya existe
+        if (users.any { it.username == username }) {
+            _authState.value = AuthState.Error("El usuario '$username' ya existe")
+            return
+        }
+
         val newUser = User(username, password, email)
         users.add(newUser)
         _currentUser.value = newUser
@@ -46,6 +73,11 @@ class AuthViewModel : ViewModel() {
     }
 
     fun resetPassword(email: String, newPassword: String) {
+        if (email.isBlank() || newPassword.isBlank()) {
+            _authState.value = AuthState.Error("Completa ambos campos para actualizar la contraseña")
+            return
+        }
+
         val userIndex = users.indexOfFirst { it.email == email }
         if (userIndex != -1) {
             val user = users[userIndex]
@@ -58,6 +90,14 @@ class AuthViewModel : ViewModel() {
 
     fun logout() {
         _currentUser.value = null
+        _authState.value = AuthState.Initial
+    }
+
+    /**
+     * Función para restaurar el estado a 'Initial'
+     * después de mostrar el mensaje en la UI.
+     */
+    fun setAuthStateToInitial() {
         _authState.value = AuthState.Initial
     }
 
