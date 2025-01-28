@@ -29,13 +29,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-
-                    // Inyectamos el ViewModel
                     val authViewModel: AuthViewModel = viewModel()
+
+                    // Observamos el estado de autenticación
                     val authState = authViewModel.authState.collectAsState()
                     val currentUser = authViewModel.currentUser.collectAsState()
 
-                    // Declaramos el gráfico de navegación
                     NavHost(
                         navController = navController,
                         startDestination = "login"
@@ -44,64 +43,55 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(
                                 onLoginClick = { username, password ->
                                     authViewModel.login(username, password)
-
-                                    // Si el login fue exitoso, navegamos a home
-                                    if (authState.value is AuthViewModel.AuthState.Success) {
-                                        navController.navigate("home")
-                                    }
                                 },
                                 onRegisterClick = {
                                     navController.navigate("register")
                                 },
                                 onForgotPasswordClick = {
                                     navController.navigate("forgot_password")
-                                },
-                                // Le pasamos el estado actual y una callback para resetearlo
-                                authState = authState.value,
-                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
+                                }
                             )
+
+                            // Si login es exitoso, pasa a home
+                            if (authState.value is AuthViewModel.AuthState.Success) {
+                                navController.navigate("home")
+                            }
                         }
 
                         composable("register") {
                             RegisterScreen(
                                 onRegisterClick = { username, password, email ->
                                     authViewModel.register(username, password, email)
-
-                                    // Si el registro fue exitoso, navegamos a home
-                                    if (authState.value is AuthViewModel.AuthState.Success) {
-                                        navController.navigate("home")
-                                    }
                                 },
-                                onBackClick = {
-                                    navController.navigateUp()
-                                },
-                                authState = authState.value,
-                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
+                                onBackClick = { navController.navigateUp() }
                             )
+
+                            // Si registro es exitoso, pasa a home
+                            if (authState.value is AuthViewModel.AuthState.Success) {
+                                navController.navigate("home")
+                            }
                         }
 
                         composable("forgot_password") {
                             ForgotPasswordScreen(
                                 onResetClick = { email, newPassword ->
                                     authViewModel.resetPassword(email, newPassword)
-                                    // Si la contraseña se reseteó con éxito, volvemos al login
-                                    if (authState.value is AuthViewModel.AuthState.Success) {
-                                        navController.navigate("login")
-                                    }
                                 },
-                                onBackClick = {
-                                    navController.navigateUp()
-                                },
-                                authState = authState.value,
-                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
+                                onBackClick = { navController.navigateUp() }
                             )
+
+                            // Si se resetearon las credenciales con éxito, vuelve al login
+                            if (authState.value is AuthViewModel.AuthState.Success) {
+                                navController.navigate("login")
+                            }
                         }
 
                         composable("home") {
-                            // Solo mostramos Home si existe un usuario logueado
+                            // Mostrar solo si hay usuario
                             currentUser.value?.let { user ->
                                 HomeScreen(
                                     username = user.username,
+                                    email = user.email,
                                     onLogoutClick = {
                                         authViewModel.logout()
                                         navController.navigate("login") {

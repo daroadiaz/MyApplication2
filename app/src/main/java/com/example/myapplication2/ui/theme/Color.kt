@@ -2,10 +2,13 @@ package com.example.myapplication2.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Ejemplo de paleta “sobria”
+val Raspberry = Color(0xFFB30838)
+val Pinkish   = Color(0xFFE03E52)
+val TealDark  = Color(0xFF00A5B5)
+val TealLight = Color(0xFF71C5E8)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Otros colores que pudieras necesitar
+val White     = Color(0xFFFFFFFF)
+val LightGray = Color(0xFFF7F7F7)
+val DarkGray  = Color(0xFF121212)
