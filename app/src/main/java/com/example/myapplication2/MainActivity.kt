@@ -29,15 +29,23 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+
+                    // Inyectamos el ViewModel
                     val authViewModel: AuthViewModel = viewModel()
                     val authState = authViewModel.authState.collectAsState()
                     val currentUser = authViewModel.currentUser.collectAsState()
 
-                    NavHost(navController = navController, startDestination = "login") {
+                    // Declaramos el gráfico de navegación
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login"
+                    ) {
                         composable("login") {
                             LoginScreen(
                                 onLoginClick = { username, password ->
                                     authViewModel.login(username, password)
+
+                                    // Si el login fue exitoso, navegamos a home
                                     if (authState.value is AuthViewModel.AuthState.Success) {
                                         navController.navigate("home")
                                     }
@@ -47,36 +55,50 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onForgotPasswordClick = {
                                     navController.navigate("forgot_password")
-                                }
+                                },
+                                // Le pasamos el estado actual y una callback para resetearlo
+                                authState = authState.value,
+                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
                             )
                         }
+
                         composable("register") {
                             RegisterScreen(
                                 onRegisterClick = { username, password, email ->
                                     authViewModel.register(username, password, email)
+
+                                    // Si el registro fue exitoso, navegamos a home
                                     if (authState.value is AuthViewModel.AuthState.Success) {
                                         navController.navigate("home")
                                     }
                                 },
                                 onBackClick = {
                                     navController.navigateUp()
-                                }
+                                },
+                                authState = authState.value,
+                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
                             )
                         }
+
                         composable("forgot_password") {
                             ForgotPasswordScreen(
                                 onResetClick = { email, newPassword ->
                                     authViewModel.resetPassword(email, newPassword)
+                                    // Si la contraseña se reseteó con éxito, volvemos al login
                                     if (authState.value is AuthViewModel.AuthState.Success) {
                                         navController.navigate("login")
                                     }
                                 },
                                 onBackClick = {
                                     navController.navigateUp()
-                                }
+                                },
+                                authState = authState.value,
+                                onConsumedMessage = { authViewModel.setAuthStateToInitial() }
                             )
                         }
+
                         composable("home") {
+                            // Solo mostramos Home si existe un usuario logueado
                             currentUser.value?.let { user ->
                                 HomeScreen(
                                     username = user.username,
