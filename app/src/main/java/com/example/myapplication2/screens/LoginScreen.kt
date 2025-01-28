@@ -1,12 +1,15 @@
 package com.example.myapplication2.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.myapplication2.R
 import com.example.myapplication2.viewmodel.AuthViewModel
 
 @Composable
@@ -20,13 +23,6 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Mostrar SnackBar para errores
-    LaunchedEffect(authState) {
-        if (authState is AuthViewModel.AuthState.Error) {
-            // El error se mostrará automáticamente
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,6 +30,15 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Logo del pingüino
+        Image(
+            painter = painterResource(id = R.drawable.penguin_logo),
+            contentDescription = "Logo Pingüino",
+            modifier = Modifier
+                .size(120.dp)
+                .padding(bottom = 24.dp)
+        )
+
         Text(
             text = "Iniciar Sesión",
             style = MaterialTheme.typography.headlineMedium,
@@ -45,7 +50,8 @@ fun LoginScreen(
             onValueChange = { username = it },
             label = { Text("Usuario") },
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("usuario", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error && 
+                     authState.message.contains("usuario", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -56,7 +62,8 @@ fun LoginScreen(
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("contraseña", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error && 
+                     authState.message.contains("contraseña", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -78,7 +85,6 @@ fun LoginScreen(
             Text("Registrarse")
         }
 
-        // Mostrar mensajes de error o éxito
         if (authState is AuthViewModel.AuthState.Error) {
             Snackbar(
                 modifier = Modifier.padding(16.dp),
