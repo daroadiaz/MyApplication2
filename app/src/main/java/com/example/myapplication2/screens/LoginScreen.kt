@@ -7,15 +7,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.myapplication2.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
+    authState: AuthViewModel.AuthState,
     onLoginClick: (String, String) -> Unit,
     onRegisterClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    onDismissError: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // Mostrar SnackBar para errores
+    LaunchedEffect(authState) {
+        if (authState is AuthViewModel.AuthState.Error) {
+            // El error se mostrará automáticamente
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -34,7 +44,8 @@ fun LoginScreen(
             value = username,
             onValueChange = { username = it },
             label = { Text("Usuario") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("usuario", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -44,7 +55,8 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("contraseña", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -64,6 +76,20 @@ fun LoginScreen(
 
         TextButton(onClick = onRegisterClick) {
             Text("Registrarse")
+        }
+
+        // Mostrar mensajes de error o éxito
+        if (authState is AuthViewModel.AuthState.Error) {
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    TextButton(onClick = onDismissError) {
+                        Text("Cerrar")
+                    }
+                }
+            ) {
+                Text(authState.message)
+            }
         }
     }
 }
