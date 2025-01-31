@@ -37,7 +37,8 @@ fun ForgotPasswordScreen(
             onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("email", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error &&
+                    authState.message.contains("email", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -48,7 +49,8 @@ fun ForgotPasswordScreen(
             label = { Text("Nueva Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && authState.message.contains("contraseña", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error &&
+                    authState.message.contains("contraseña", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -66,7 +68,6 @@ fun ForgotPasswordScreen(
             Text("Volver al inicio de sesión")
         }
 
-        // Mostrar mensajes de error o éxito
         if (authState is AuthViewModel.AuthState.Error) {
             Snackbar(
                 modifier = Modifier.padding(16.dp),

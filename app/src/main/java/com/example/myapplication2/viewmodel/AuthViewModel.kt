@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AuthViewModel : ViewModel() {
+
+    // Lista de usuarios por defecto
     private val users = mutableListOf(
         User("usuario1", "password1", "user1@email.com"),
         User("usuario2", "password2", "user2@email.com"),
@@ -65,7 +67,7 @@ class AuthViewModel : ViewModel() {
                 return
             }
             users.size >= 10 -> {
-                _authState.value = AuthState.Error("Se ha alcanzado el límite máximo de usuarios (5)")
+                _authState.value = AuthState.Error("Se ha alcanzado el límite máximo de usuarios (10)")
                 return
             }
             users.any { it.username == username } -> {

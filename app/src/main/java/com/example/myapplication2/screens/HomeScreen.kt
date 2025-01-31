@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     username: String,
     email: String,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onNavigateToCommunication: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -22,8 +23,11 @@ fun HomeScreen(
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 80.dp) // Espacio para el botón de cerrar sesión
         ) {
+            // Título de bienvenida
             Text(
                 text = "Bienvenido, $username",
                 style = MaterialTheme.typography.headlineMedium
@@ -38,6 +42,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Tarjeta de información del usuario
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
@@ -61,15 +66,31 @@ fun HomeScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(text = username, style = MaterialTheme.typography.titleMedium)
-                            Text(text = email, style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                text = username,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = email,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botón para ir a la pantalla de Comunicación
+            Button(
+                onClick = { onNavigateToCommunication() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ir a Pantalla de Comunicación")
+            }
         }
 
-        // Botón de cerrar sesión en la parte inferior
+        // Botón de cerrar sesión siempre visible en la parte inferior
         Button(
             onClick = onLogoutClick,
             modifier = Modifier

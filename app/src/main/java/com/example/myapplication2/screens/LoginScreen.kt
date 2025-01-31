@@ -50,8 +50,8 @@ fun LoginScreen(
             onValueChange = { username = it },
             label = { Text("Usuario") },
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && 
-                     authState.message.contains("usuario", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error &&
+                    authState.message.contains("usuario", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -62,8 +62,8 @@ fun LoginScreen(
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            isError = authState is AuthViewModel.AuthState.Error && 
-                     authState.message.contains("contraseña", ignoreCase = true)
+            isError = authState is AuthViewModel.AuthState.Error &&
+                    authState.message.contains("contraseña", ignoreCase = true)
         )
 
         Spacer(modifier = Modifier.height(24.dp))

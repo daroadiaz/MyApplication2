@@ -12,10 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication2.screens.ForgotPasswordScreen
-import com.example.myapplication2.screens.HomeScreen
-import com.example.myapplication2.screens.LoginScreen
-import com.example.myapplication2.screens.RegisterScreen
+import com.example.myapplication2.screens.*
 import com.example.myapplication2.ui.theme.MyApplication2Theme
 import com.example.myapplication2.viewmodel.AuthViewModel
 
@@ -34,6 +31,8 @@ class MainActivity : ComponentActivity() {
                     val currentUser = authViewModel.currentUser.collectAsState()
 
                     NavHost(navController = navController, startDestination = "login") {
+
+                        // Pantalla de Login
                         composable("login") {
                             LoginScreen(
                                 authState = authState.value,
@@ -41,6 +40,7 @@ class MainActivity : ComponentActivity() {
                                     authViewModel.login(username, password)
                                     if (authState.value is AuthViewModel.AuthState.Success) {
                                         navController.navigate("home") {
+                                            // Eliminamos de la pila la pantalla de login
                                             popUpTo("login") { inclusive = true }
                                         }
                                     }
@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Pantalla de Registro
                         composable("register") {
                             RegisterScreen(
                                 authState = authState.value,
@@ -77,6 +78,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Pantalla de Recuperar Contraseña
                         composable("forgot_password") {
                             ForgotPasswordScreen(
                                 authState = authState.value,
@@ -97,6 +99,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Pantalla principal (Home)
                         composable("home") {
                             currentUser.value?.let { user ->
                                 HomeScreen(
@@ -107,9 +110,20 @@ class MainActivity : ComponentActivity() {
                                         navController.navigate("login") {
                                             popUpTo("login") { inclusive = true }
                                         }
+                                    },
+                                    onNavigateToCommunication = {
+                                        navController.navigate("communication")
                                     }
                                 )
                             }
+                        }
+
+                        composable("communication") {
+                            CommunicationScreen(
+                                onBackClick = {
+                                    navController.navigateUp()
+                                }
+                            )
                         }
                     }
                 }

@@ -36,7 +36,6 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun MyApplication2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Desactiva dynamicColor si prefieres forzar esta paleta
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -46,7 +45,6 @@ fun MyApplication2Theme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        // Si no, usar nuestras paletas definidas
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
